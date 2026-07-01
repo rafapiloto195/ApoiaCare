@@ -237,6 +237,27 @@
             grid-column: 1 / -1;
         }
 
+        .patient-pill {
+            display: inline-block;
+            background: #e7f1ff;
+            color: #0d6efd;
+            border: 1px solid #b6d4fe;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .alert-info {
+            background: #fff3cd;
+            border: 1px solid #ffecb5;
+            color: #664d03;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
         @media (max-width: 768px) {
             .menu-toggle { display: block; }
             .nav-menu {
@@ -294,11 +315,22 @@
     <section class="form-section">
         <form id="regForm">
             <input type="hidden" id="regId">
+            <div id="avisoPacientes" class="alert-info" style="display:none;">
+                Cadastre pelo menos um paciente antes de criar registros diários.
+            </div>
             <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="pacienteSelect">Paciente *</label>
+                    <select id="pacienteSelect" class="select-control" required>
+                        <option value="">Selecione o paciente...</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label class="form-label" for="data">Data</label>
                     <input type="date" id="data" class="form-control">
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group">
                     <label class="form-label" for="humor">Humor predominante</label>
                     <select id="humor" class="select-control">
@@ -376,10 +408,21 @@
 
     // ---------- REGISTROS DIÁRIOS ----------
     const STORAGE_KEY = 'registrosDiariosAlzheimer';
+    const PACIENTES_KEY = 'pacientesAlzheimer';
+    const PACIENTE_ANTIGO_KEY = 'pacienteAlzheimer';
     let registros = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    let pacientes = JSON.parse(localStorage.getItem(PACIENTES_KEY) || '[]');
+
+    const pacienteAntigo = JSON.parse(localStorage.getItem(PACIENTE_ANTIGO_KEY) || 'null');
+    if (pacientes.length === 0 && pacienteAntigo && pacienteAntigo.nome) {
+        pacientes.push({ id: Date.now(), ...pacienteAntigo });
+        localStorage.setItem(PACIENTES_KEY, JSON.stringify(pacientes));
+    }
 
     const regForm = document.getElementById('regForm');
     const regId = document.getElementById('regId');
+    const pacienteSelect = document.getElementById('pacienteSelect');
+    const avisoPacientes = document.getElementById('avisoPacientes');
     const data = document.getElementById('data');
     const humor = document.getElementById('humor');
     const sono = document.getElementById('sono');
@@ -394,8 +437,25 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
     }
 
+    function pacienteNome(id) {
+        const paciente = pacientes.find(p => Number(p.id) === Number(id));
+        return paciente ? paciente.nome : 'Paciente não definido';
+    }
+
+    function carregarPacientesSelect() {
+        pacienteSelect.innerHTML = '<option value="">Selecione o paciente...</option>';
+        pacientes.forEach(paciente => {
+            const option = document.createElement('option');
+            option.value = paciente.id;
+            option.textContent = paciente.nome;
+            pacienteSelect.appendChild(option);
+        });
+        avisoPacientes.style.display = pacientes.length ? 'none' : 'block';
+    }
+
     function limparFormulario() {
         regId.value = '';
+        pacienteSelect.value = '';
         data.value = '';
         humor.value = '';
         sono.value = '';
@@ -420,8 +480,9 @@
         registros.slice(0, 10).forEach(reg => { // últimos 10
             const card = document.createElement('div');
             card.className = 'reg-card';
-            const dataFormatada = new Date(reg.data).toLocaleDateString('pt-BR');
+            const dataFormatada = reg.data ? new Date(reg.data).toLocaleDateString('pt-BR') : 'Sem data';
             card.innerHTML = `
+                <span class="patient-pill">👤 ${pacienteNome(reg.pacienteId)}</span>
                 <div class="reg-data">${dataFormatada}</div>
                 <div class="reg-humor">${reg.humor ? reg.humor.charAt(0).toUpperCase() + reg.humor.slice(1) : '---'}</div>
                 <div class="reg-resumo">
@@ -452,6 +513,7 @@
 
     function editarRegistro(reg) {
         regId.value = reg.id;
+        pacienteSelect.value = reg.pacienteId || '';
         data.value = reg.data;
         humor.value = reg.humor || '';
         sono.value = reg.sono || '';
@@ -464,13 +526,14 @@
 
     regForm.onsubmit = (e) => {
         e.preventDefault();
-        if (!data.value || !humor.value) {
-            alert('Preencha data e humor.');
+        if (!pacienteSelect.value || !data.value || !humor.value) {
+            alert('Preencha paciente, data e humor.');
             return;
         }
 
         const dados = {
             id: regId.value ? Number(regId.value) : Date.now(),
+            pacienteId: Number(pacienteSelect.value),
             data: data.value,
             humor: humor.value,
             sono: sono.value ? Number(sono.value) : null,
@@ -494,6 +557,7 @@
     data.valueAsDate = new Date();
 
     // Inicializar
+    carregarPacientesSelect();
     renderizarLista();
 </script>
 
