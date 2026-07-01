@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registros Diários - ApoiaCare</title>
     <style>
-        /* CSS IDÊNTICO aos anteriores */
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
@@ -311,7 +311,7 @@
         </p>
     </section>
 
-    <!-- Formulário registro -->
+    
     <section class="form-section">
         <form id="regForm">
             <input type="hidden" id="regId">
@@ -378,7 +378,7 @@
         </form>
     </section>
 
-    <!-- Lista de registros -->
+    
     <section>
         <h2 style="font-size:1.5rem;color:#333;margin-bottom:1rem;">Últimos registros</h2>
         <div id="listaRegistros" class="registros-grid"></div>
@@ -392,7 +392,6 @@
 <button class="accessibility-btn" id="btnAumentarFonte">🔍 A+</button>
 
 <script>
-    // Menu e acessibilidade (idêntico)
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
     menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
@@ -405,8 +404,6 @@
         fontSize += 0.15;
         document.body.style.fontSize = fontSize + 'rem';
     });
-
-    // ---------- REGISTROS DIÁRIOS ----------
     const STORAGE_KEY = 'registrosDiariosAlzheimer';
     const PACIENTES_KEY = 'pacientesAlzheimer';
     const PACIENTE_ANTIGO_KEY = 'pacienteAlzheimer';
@@ -473,8 +470,6 @@
             return;
         }
         listaVazia.style.display = 'none';
-
-        // Ordenar por data (mais recente primeiro)
         registros.sort((a, b) => new Date(b.data) - new Date(a.data));
 
         registros.slice(0, 10).forEach(reg => { // últimos 10
@@ -496,8 +491,6 @@
                     <button class="btn-small btn-delete">Excluir</button>
                 </div>
             `;
-
-            // Eventos
             card.querySelector('.btn-edit').onclick = () => editarRegistro(reg);
             card.querySelector('.btn-delete').onclick = () => {
                 if (confirm('Excluir este registro?')) {
@@ -552,11 +545,7 @@
         limparFormulario();
         renderizarLista();
     };
-
-    // Data de hoje
     data.valueAsDate = new Date();
-
-    // Inicializar
     carregarPacientesSelect();
     renderizarLista();
 </script>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de ApoiaCare - Alzheimer</title>
     <style>
-        /* ✅ CORRIGIDO: flex mais robusto + padding fixo */
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
@@ -17,7 +17,7 @@
             min-height: 100vh;
         }
 
-        /* ✅ NAVBAR CORRIGIDA */
+        
         .navbar {
             background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
             padding: 1rem 0;
@@ -27,11 +27,11 @@
         .navbar-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px; /* ✅ padding fixo */
+            padding: 0 20px; 
             display: flex;
             justify-content: space-between;
             align-items: center;
-            min-height: 60px; /* ✅ altura mínima */
+            min-height: 60px; 
         }
         
         .navbar-brand {
@@ -39,13 +39,13 @@
             font-size: 1.4rem;
             font-weight: 700;
             text-decoration: none;
-            white-space: nowrap; /* ✅ não quebra linha */
+            white-space: nowrap; 
         }
         
         .nav-menu {
             display: flex;
             list-style: none;
-            gap: 0; /* ✅ gap zero para controle preciso */
+            gap: 0; 
             align-items: center;
             margin: 0;
         }
@@ -54,10 +54,10 @@
             color: white !important;
             text-decoration: none;
             font-weight: 500;
-            padding: 12px 16px; /* ✅ padding uniforme */
+            padding: 12px 16px; 
             border-radius: 6px;
             transition: all 0.3s ease;
-            white-space: nowrap; /* ✅ não quebra */
+            white-space: nowrap; 
             display: flex;
             align-items: center;
         }
@@ -84,7 +84,7 @@
         .main-container {
             max-width: 1200px;
             margin: 2rem auto;
-            padding: 0 20px; /* ✅ mesmo padding da navbar */
+            padding: 0 20px; 
         }
         
         .hero-section {
@@ -231,7 +231,7 @@
         <a href="app.html" class="navbar-brand">🧠 ApoiaCare</a>
         <button class="menu-toggle" id="menuToggle">☰</button>
         <ul class="nav-menu" id="navMenu">
-            <!-- ✅ MENU CORRIGIDO - PADRÃO ORIGINAL -->
+            
             <li><a href="app.html" class="nav-link active">🏠 Início</a></li>
             <li><a href="paciente.html" class="nav-link">👤 Paciente</a></li>
             <li><a href="medicamentos.html" class="nav-link">💊 Medicamentos</a></li>

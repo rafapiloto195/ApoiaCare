@@ -114,8 +114,6 @@
     const PACIENTES_KEY = 'pacientesAlzheimer';
     const ANTIGO_KEY = 'pacienteAlzheimer';
     let pacientes = JSON.parse(localStorage.getItem(PACIENTES_KEY) || '[]');
-
-    // Migração: se existia o cadastro único da versão anterior, transforma em lista.
     const pacienteAntigo = JSON.parse(localStorage.getItem(ANTIGO_KEY) || 'null');
     if (pacientes.length === 0 && pacienteAntigo && pacienteAntigo.nome) {
         pacientes.push({ id: Date.now(), ...pacienteAntigo });

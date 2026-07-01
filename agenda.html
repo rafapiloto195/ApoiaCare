@@ -189,7 +189,6 @@
 <button class="accessibility-btn" id="btnAumentarFonte">🔍 A+</button>
 
 <script>
-    // Menu mobile e acessibilidade
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
 
@@ -203,8 +202,6 @@
         fontSize += 0.15;
         document.body.style.fontSize = fontSize + 'rem';
     });
-
-    // Abas
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -213,8 +210,6 @@
             document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
         });
     });
-
-    // Chaves do armazenamento local
     const PACIENTES_KEY = 'pacientesAlzheimer';
     const MEDS_KEY = 'medicamentosAlzheimer';
     const COMPROMISSOS_KEY = 'compromissosAlzheimer';
@@ -229,8 +224,6 @@
         const paciente = pacientes.find(p => Number(p.id) === Number(id));
         return paciente ? paciente.nome : 'Paciente não definido';
     }
-
-    // Agenda de medicamentos por paciente
     function renderizarAgendaMedicamentos() {
         let linhas = [];
 
@@ -284,8 +277,6 @@
             </table>
         `;
     }
-
-    // Compromissos vinculados ao paciente
     const compromissoForm = document.getElementById('compromissoForm');
     const compromissoId = document.getElementById('compromissoId');
     const compromissoPacienteSelect = document.getElementById('compromissoPacienteSelect');
@@ -411,8 +402,6 @@
         limparFormCompromisso();
         renderizarCompromissos();
     });
-
-    // Serviços essenciais editáveis
     const servicoForm = document.getElementById('servicoForm');
     const servicoId = document.getElementById('servicoId');
     const servicoNome = document.getElementById('servicoNome');
@@ -518,8 +507,6 @@
         limparFormServico();
         renderizarServicos();
     });
-
-    // Inicialização
     compromissoData.valueAsDate = new Date();
     carregarPacientesCompromisso();
     renderizarAgendaMedicamentos();

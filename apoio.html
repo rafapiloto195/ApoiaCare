@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ApoiaCare - Alzheimer</title>
     <style>
-        /* CSS IDÊNTICO aos anteriores */
+        
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
@@ -298,7 +298,7 @@
         </p>
     </section>
 
-    <!-- Diário pessoal do cuidador -->
+    
     <section class="secao">
         <h2 class="secao-titulo">📓 Meu diário - Como estou me sentindo</h2>
         <div class="form-section">
@@ -323,7 +323,7 @@ Ex: Hoje foi difícil a hora do banho, mas ele sorriu quando ouviu música..."><
         </p>
     </section>
 
-    <!-- Materiais educativos -->
+    
     <section class="secao">
         <h2 class="secao-titulo">📚 Materiais educativos gratuitos</h2>
         <div class="recurso-grid">
@@ -350,7 +350,7 @@ Ex: Hoje foi difícil a hora do banho, mas ele sorriu quando ouviu música..."><
         </div>
     </section>
 
-    <!-- Grupos de apoio locais -->
+    
     <section class="secao">
         <h2 class="secao-titulo">🤝 Apoio em São José dos Campos/SP</h2>
         <div class="recurso-grid">
@@ -375,7 +375,7 @@ Ex: Hoje foi difícil a hora do banho, mas ele sorriu quando ouviu música..."><
         </div>
     </section>
 
-    <!-- Dicas rápidas -->
+    
     <section class="secao">
         <h2 class="secao-titulo">💡 Dicas rápidas de autocuidado</h2>
         <ul style="font-size:1.05rem;color:#555;line-height:1.8;">
@@ -393,7 +393,6 @@ Ex: Hoje foi difícil a hora do banho, mas ele sorriu quando ouviu música..."><
 <button class="accessibility-btn" id="btnAumentarFonte">🔍 A+</button>
 
 <script>
-    // Menu e acessibilidade
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
     menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
@@ -406,8 +405,6 @@ Ex: Hoje foi difícil a hora do banho, mas ele sorriu quando ouviu música..."><
         fontSize += 0.15;
         document.body.style.fontSize = fontSize + 'rem';
     });
-
-    // ---------- DIÁRIO DO CUIDADOR ----------
     const DIARIO_KEY = 'diarioCuidadorAlzheimer';
     let diario = JSON.parse(localStorage.getItem(DIARIO_KEY) || '[]');
 
@@ -438,8 +435,6 @@ Ex: Hoje foi difícil a hora do banho, mas ele sorriu quando ouviu música..."><
             return;
         }
         semDiario.style.display = 'none';
-
-        // Mais recente primeiro
         diario.sort((a, b) => new Date(b.data) - new Date(a.data));
 
         diario.slice(0, 8).forEach(item => {
@@ -500,11 +495,7 @@ Ex: Hoje foi difícil a hora do banho, mas ele sorriu quando ouviu música..."><
         limparDiarioForm();
         renderizarDiario();
     };
-
-    // Data de hoje
     diarioData.valueAsDate = new Date();
-
-    // Inicializar
     renderizarDiario();
 </script>
 
