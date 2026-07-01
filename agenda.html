@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda & Serviços - Apoio ao Cuidador</title>
+    <style>
+        /* CSS IDÊNTICO aos anteriores */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 60px;
+        }
+        
+        .navbar-brand {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0;
+            align-items: center;
+            margin: 0;
+        }
+        
+        .nav-link {
+            color: white !important;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link.active {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-1px);
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-left: 6px solid #20c997;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .page-text {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .tabs-section {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6c757d;
+        }
+        
+        .tab-btn.active {
+            background: white;
+            color: #20c997;
+            border-bottom: 3px solid #20c997;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 2rem;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .form-control {
+            padding: 0.9rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #20c997;
+            box-shadow: 0 0 0 3px rgba(32,201,151,0.1);
+        }
+        
+        .btn-save {
+            background: linear-gradient(135deg, #20c997 0%, #1ea88c 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(32,201,151,0.4);
+        }
+
+        /* Lista compromissos */
+        .compromissos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .compromisso-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-left: 4px solid #20c997;
+        }
+        
+        .compromisso-data {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .compromisso-tipo {
+            font-size: 1.1rem;
+            color: #20c997;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .compromisso-local {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .compromisso-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Tabela serviços */
+        .servicos-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+        }
+        
+        .servicos-table th {
+            background: linear-gradient(135deg, #20c997 0%, #1ea88c 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        .servicos-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .servicos-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .servico-nome {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .servico-tel {
+            color: #20c997;
+            font-weight: 500;
+        }
+
+        .no-itens {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-menu {
+                position: fixed; top: 0; right: -100%; height: 100vh; width: 280px;
+                background: #0d6efd; flex-direction: column; padding-top: 80px;
+                transition: right 0.3s ease;
+            }
+            .nav-menu.active { right: 0; }
+            .form-row { grid-template-columns: 1fr; }
+            .main-container { padding: 0 15px; }
+            .navbar-container { padding: 0 15px; }
+            .compromissos-grid { grid-template-columns: 1fr; }
+        }
+
+        .accessibility-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #0d6efd; color: white; border: none;
+            border-radius: 50px; padding: 12px 20px; font-size: 1rem;
+            font-weight: 500; box-shadow: 0 4px 15px rgba(13,110,253,0.4);
+            cursor: pointer; z-index: 1000; transition: all 0.3s ease;
+        }
+        
+        .accessibility-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(13,110,253,0.5);
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+        <a href="app.html" class="navbar-brand">🏥 Apoio ao Cuidador</a>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="app.html" class="nav-link">🏠 Início</a></li>
+            <li><a href="paciente.html" class="nav-link">👤 Paciente</a></li>
+            <li><a href="medicamentos.html" class="nav-link">💊 Medicamentos</a></li>
+            <li><a href="registros.html" class="nav-link">📝 Registros diários</a></li>
+            <li><a href="agenda.html" class="nav-link active">📅 Agenda & Serviços</a></li>
+            <li><a href="apoio.html" class="nav-link">❤️ Apoio ao cuidador</a></li>
+        </ul>
+    </div>
+</header>
+
+<main class="main-container">
+    
+    <section class="page-header">
+        <h1 class="page-title">📅 Agenda & Serviços</h1>
+        <p class="page-text">
+            Gerencie compromissos médicos e mantenha contatos de serviços essenciais sempre à mão.
+        </p>
+    </section>
+
+    <!-- Tabs -->
+    <section class="tabs-section">
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="compromissos">Compromissos</button>
+            <button class="tab-btn" data-tab="servicos">Serviços essenciais</button>
+        </div>
+        
+        <!-- Tab Compromissos -->
+        <div id="tab-compromissos" class="tab-content active">
+            <section class="form-section">
+                <form id="compromissoForm">
+                    <input type="hidden" id="compromissoId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoData">Data</label>
+                            <input type="date" id="compromissoData" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoHora">Hora</label>
+                            <input type="time" id="compromissoHora" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoTipo">Tipo</label>
+                            <select id="compromissoTipo" class="form-control">
+                                <option value="">Selecione...</option>
+                                <option value="consulta">🩺 Consulta médica</option>
+                                <option value="exame">🔬 Exame</option>
+                                <option value="terapia">🧠 Terapia ocupacional</option>
+                                <option value="outro">📋 Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoLocal">Local</label>
+                            <input type="text" id="compromissoLocal" class="form-control" 
+                                   placeholder="Ex: UBS Centro, Rua das Flores 123">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-save">📝 Salvar compromisso</button>
+                </form>
+            </section>
+            <div id="listaCompromissos" class="compromissos-grid"></div>
+            <p id="semCompromissos" class="no-itens" style="display:none;">
+                Nenhum compromisso cadastrado.
+            </p>
+        </div>
+
+        <!-- Tab Serviços -->
+        <div id="tab-servicos" class="tab-content">
+            <div class="servicos-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Serviço</th>
+                            <th>Telefone</th>
+                            <th>Endereço</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="servico-nome">SAMU</td>
+                            <td class="servico-tel">192</td>
+                            <td>Emergência 24h</td>
+                        </tr>
+                        <tr>
+                            <td class="servico-nome">UBS mais próxima</td>
+                            <td class="servico-tel">[Adicione aqui]</td>
+                            <td>[Endereço da UBS]</td>
+                        </tr>
+                        <tr>
+                            <td class="servico-nome">Médico responsável</td>
+                            <td class="servico-tel">[Telefone médico]</td>
+                            <td>[Clínica/Hospital]</td>
+                        </tr>
+                        <tr>
+                            <td class="servico-nome">ABRAz (Associação Alzheimer)</td>
+                            <td class="servico-tel">11 3253-7491</td>
+                            <td>abr-az.org.br</td>
+                        </tr>
+                        <tr>
+                            <td class="servico-nome">CAPS Idoso</td>
+                            <td class="servico-tel">[Telefone local]</td>
+                            <td>[Endereço CAPS]</td>
+                        </tr>
+                        <tr>
+                            <td class="servico-nome">Polícia (caso de fuga)</td>
+                            <td class="servico-tel">190</td>
+                            <td>Emergência 24h</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="text-align:center;color:#666;font-size:0.95rem;">
+                📌 <strong>Dica:</strong> Substitua os campos [ ] pelos contatos reais da sua região.
+            </p>
+        </div>
+    </section>
+
+</main>
+
+<button class="accessibility-btn" id="btnAumentarFonte">🔍 A+</button>
+
+<script>
+    // Menu e acessibilidade (idêntico)
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+    menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => navMenu.classList.remove('active'));
+    });
+
+    let fontSize = 1.1;
+    document.getElementById('btnAumentarFonte').addEventListener('click', () => {
+        fontSize += 0.15;
+        document.body.style.fontSize = fontSize + 'rem';
+    });
+
+    // ---------- AGENDA (localStorage) ----------
+    const COMPROMISSOS_KEY = 'compromissosAlzheimer';
+    let compromissos = JSON.parse(localStorage.getItem(COMPROMISSOS_KEY) || '[]');
+
+    // Tabs
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Form compromissos
+    const compromissoForm = document.getElementById('compromissoForm');
+    const compromissoId = document.getElementById('compromissoId');
+    const compromissoData = document.getElementById('compromissoData');
+    const compromissoHora = document.getElementById('compromissoHora');
+    const compromissoTipo = document.getElementById('compromissoTipo');
+    const compromissoLocal = document.getElementById('compromissoLocal');
+    const listaCompromissos = document.getElementById('listaCompromissos');
+    const semCompromissos = document.getElementById('semCompromissos');
+
+    function salvarCompromissos() {
+        localStorage.setItem(COMPROMISSOS_KEY, JSON.stringify(compromissos));
+    }
+
+    function limparFormCompromisso() {
+        compromissoId.value = '';
+        compromissoData.value = '';
+        compromissoHora.value = '';
+        compromissoTipo.value = '';
+        compromissoLocal.value = '';
+        compromissoData.focus();
+    }
+
+    function renderizarCompromissos() {
+        listaCompromissos.innerHTML = '';
+        if (compromissos.length === 0) {
+            semCompromissos.style.display = 'block';
+            return;
+        }
+        semCompromissos.style.display = 'none';
+
+        // Ordenar por data/hora
+        compromissos.sort((a, b) => new Date(a.data + ' ' + a.hora) - new Date(b.data + ' ' + b.hora));
+
+        compromissos.forEach(comp => {
+            const card = document.createElement('div');
+            card.className = 'compromisso-card';
+            const dataFormatada = new Date(comp.data).toLocaleDateString('pt-BR');
+            card.innerHTML = `
+                <div class="compromisso-data">${dataFormatada} - ${comp.hora}</div>
+                <div class="compromisso-tipo">${comp.tipo}</div>
+                <div class="compromisso-local">${comp.local}</div>
+                <div class="compromisso-actions">
+                    <button class="btn-small btn-edit">Editar</button>
+                    <button class="btn-small btn-delete">Excluir</button>
+                </div>
+            `;
+
+            card.querySelector('.btn-edit').onclick = () => editarCompromisso(comp);
+            card.querySelector('.btn-delete').onclick = () => {
+                if (confirm('Excluir compromisso?')) {
+                    compromissos = compromissos.filter(c => c.id !== comp.id);
+                    salvarCompromissos();
+                    renderizarCompromissos();
+                }
+            };
+
+            listaCompromissos.appendChild(card);
+        });
+    }
+
+    function editarCompromisso(comp) {
+        compromissoId.value = comp.id;
+        compromissoData.value = comp.data;
+        compromissoHora.value = comp.hora;
+        compromissoTipo.value = comp.tipo;
+        compromissoLocal.value = comp.local;
+    }
+
+    compromissoForm.onsubmit = (e) => {
+        e.preventDefault();
+        if (!compromissoData.value || !compromissoHora.value || !compromissoTipo.value) {
+            alert('Preencha data, hora e tipo.');
+            return;
+        }
+
+        const dados = {
+            id: compromissoId.value ? Number(compromissoId.value) : Date.now(),
+            data: compromissoData.value,
+            hora: compromissoHora.value,
+            tipo: compromissoTipo.value,
+            local: compromissoLocal.value.trim()
+        };
+
+        if (compromissoId.value) {
+            compromissos = compromissos.map(c => c.id === dados.id ? dados : c);
+        } else {
+            compromissos.push(dados);
+        }
+
+        salvarCompromissos();
+        limparFormCompromisso();
+        renderizarCompromissos();
+    };
+
+    // Data de hoje
+    compromissoData.valueAsDate = new Date();
+
+    // Inicializar
+    renderizarCompromissos();
+</script>
+
+</body>
+</html>

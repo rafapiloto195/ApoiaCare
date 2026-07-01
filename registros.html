@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros Diários - Apoio ao Cuidador</title>
+    <style>
+        /* CSS IDÊNTICO aos anteriores */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 60px;
+        }
+        
+        .navbar-brand {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0;
+            align-items: center;
+            margin: 0;
+        }
+        
+        .nav-link {
+            color: white !important;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link.active {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-1px);
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-left: 6px solid #fd7e14;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .page-text {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .form-control {
+            padding: 0.9rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+        }
+        
+        .select-control {
+            padding: 0.9rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .btn-save {
+            background: linear-gradient(135deg, #fd7e14 0%, #e76f51 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(253,126,20,0.4);
+        }
+
+        .registros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .reg-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-left: 4px solid #fd7e14;
+        }
+        
+        .reg-data {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .reg-humor {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+        
+        .reg-resumo {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .reg-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            flex: 1;
+            cursor: pointer;
+        }
+        
+        .btn-edit { background: #0d6efd; color: white; }
+        .btn-edit:hover { background: #0b5ed7; transform: translateY(-1px); }
+        .btn-delete { background: #dc3545; color: white; }
+        .btn-delete:hover { background: #c82333; transform: translateY(-1px); }
+
+        .no-registros {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-menu {
+                position: fixed; top: 0; right: -100%; height: 100vh; width: 280px;
+                background: #0d6efd; flex-direction: column; padding-top: 80px;
+                transition: right 0.3s ease;
+            }
+            .nav-menu.active { right: 0; }
+            .form-row { grid-template-columns: 1fr; }
+            .main-container { padding: 0 15px; }
+            .navbar-container { padding: 0 15px; }
+        }
+
+        .accessibility-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #0d6efd; color: white; border: none;
+            border-radius: 50px; padding: 12px 20px; font-size: 1rem;
+            font-weight: 500; box-shadow: 0 4px 15px rgba(13,110,253,0.4);
+            cursor: pointer; z-index: 1000; transition: all 0.3s ease;
+        }
+        
+        .accessibility-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(13,110,253,0.5);
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+        <a href="app.html" class="navbar-brand">🏥 Apoio ao Cuidador</a>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="app.html" class="nav-link">🏠 Início</a></li>
+            <li><a href="paciente.html" class="nav-link">👤 Paciente</a></li>
+            <li><a href="medicamentos.html" class="nav-link">💊 Medicamentos</a></li>
+            <li><a href="registros.html" class="nav-link active">📝 Registros diários</a></li>
+            <li><a href="agenda.html" class="nav-link">📅 Agenda & Serviços</a></li>
+            <li><a href="apoio.html" class="nav-link">❤️ Apoio ao cuidador</a></li>
+        </ul>
+    </div>
+</header>
+
+<main class="main-container">
+    
+    <section class="page-header">
+        <h1 class="page-title">📝 Registros Diários</h1>
+        <p class="page-text">
+            Registre sintomas, humor, sono e eventos importantes. Útil para mostrar ao médico.
+        </p>
+    </section>
+
+    <!-- Formulário registro -->
+    <section class="form-section">
+        <form id="regForm">
+            <input type="hidden" id="regId">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="data">Data</label>
+                    <input type="date" id="data" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="humor">Humor predominante</label>
+                    <select id="humor" class="select-control">
+                        <option value="">Selecione...</option>
+                        <option value="calmo">😊 Calmo</option>
+                        <option value="agitacao">😠 Agitação</option>
+                        <option value="triste">😢 Triste</option>
+                        <option value="confuso">😵 Confuso</option>
+                        <option value="alegre">😃 Alegre</option>
+                        <option value="outro">🤷 Outro</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="sono">Sono (horas)</label>
+                    <input type="number" id="sono" class="form-control" min="0" max="24" placeholder="Ex: 7">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="alimentacao">Alimentação</label>
+                    <select id="alimentacao" class="select-control">
+                        <option value="">Selecione...</option>
+                        <option value="boa">✅ Boa</option>
+                        <option value="regular">⚠️ Regular</option>
+                        <option value="ruim">❌ Ruim</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="episodios">Episódios importantes</label>
+                    <textarea id="episodios" class="form-control" rows="3" 
+                              placeholder="Ex: Tentou sair sozinho, queda, confusão maior..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cuidador">Como você se sente?</label>
+                    <textarea id="cuidador" class="form-control" rows="3" 
+                              placeholder="Seu humor, cansaço, dificuldades..."></textarea>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-save" id="btnSalvar">📝 Salvar registro</button>
+        </form>
+    </section>
+
+    <!-- Lista de registros -->
+    <section>
+        <h2 style="font-size:1.5rem;color:#333;margin-bottom:1rem;">Últimos registros</h2>
+        <div id="listaRegistros" class="registros-grid"></div>
+        <p id="listaVazia" class="no-registros" style="display:none;">
+            Nenhum registro ainda. Faça o primeiro!
+        </p>
+    </section>
+
+</main>
+
+<button class="accessibility-btn" id="btnAumentarFonte">🔍 A+</button>
+
+<script>
+    // Menu e acessibilidade (idêntico)
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+    menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => navMenu.classList.remove('active'));
+    });
+
+    let fontSize = 1.1;
+    document.getElementById('btnAumentarFonte').addEventListener('click', () => {
+        fontSize += 0.15;
+        document.body.style.fontSize = fontSize + 'rem';
+    });
+
+    // ---------- REGISTROS DIÁRIOS ----------
+    const STORAGE_KEY = 'registrosDiariosAlzheimer';
+    let registros = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+    const regForm = document.getElementById('regForm');
+    const regId = document.getElementById('regId');
+    const data = document.getElementById('data');
+    const humor = document.getElementById('humor');
+    const sono = document.getElementById('sono');
+    const alimentacao = document.getElementById('alimentacao');
+    const episodios = document.getElementById('episodios');
+    const cuidador = document.getElementById('cuidador');
+    const listaRegistros = document.getElementById('listaRegistros');
+    const listaVazia = document.getElementById('listaVazia');
+    const btnSalvar = document.getElementById('btnSalvar');
+
+    function salvarNoStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
+    }
+
+    function limparFormulario() {
+        regId.value = '';
+        data.value = '';
+        humor.value = '';
+        sono.value = '';
+        alimentacao.value = '';
+        episodios.value = '';
+        cuidador.value = '';
+        btnSalvar.textContent = '📝 Salvar registro';
+        data.focus();
+    }
+
+    function renderizarLista() {
+        listaRegistros.innerHTML = '';
+        if (registros.length === 0) {
+            listaVazia.style.display = 'block';
+            return;
+        }
+        listaVazia.style.display = 'none';
+
+        // Ordenar por data (mais recente primeiro)
+        registros.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+        registros.slice(0, 10).forEach(reg => { // últimos 10
+            const card = document.createElement('div');
+            card.className = 'reg-card';
+            const dataFormatada = new Date(reg.data).toLocaleDateString('pt-BR');
+            card.innerHTML = `
+                <div class="reg-data">${dataFormatada}</div>
+                <div class="reg-humor">${reg.humor ? reg.humor.charAt(0).toUpperCase() + reg.humor.slice(1) : '---'}</div>
+                <div class="reg-resumo">
+                    Sono: ${reg.sono || '---'}h | 
+                    Alimentação: ${reg.alimentacao || '---'} | 
+                    ${reg.episodios ? '⚠️ Episódios' : ''}
+                </div>
+                ${reg.episodios ? `<div style="font-size:0.95rem;color:#666;margin:0.5rem 0;">${reg.episodios}</div>` : ''}
+                <div class="reg-actions">
+                    <button class="btn-small btn-edit">Editar</button>
+                    <button class="btn-small btn-delete">Excluir</button>
+                </div>
+            `;
+
+            // Eventos
+            card.querySelector('.btn-edit').onclick = () => editarRegistro(reg);
+            card.querySelector('.btn-delete').onclick = () => {
+                if (confirm('Excluir este registro?')) {
+                    registros = registros.filter(r => r.id !== reg.id);
+                    salvarNoStorage();
+                    renderizarLista();
+                }
+            };
+
+            listaRegistros.appendChild(card);
+        });
+    }
+
+    function editarRegistro(reg) {
+        regId.value = reg.id;
+        data.value = reg.data;
+        humor.value = reg.humor || '';
+        sono.value = reg.sono || '';
+        alimentacao.value = reg.alimentacao || '';
+        episodios.value = reg.episodios || '';
+        cuidador.value = reg.cuidador || '';
+        btnSalvar.textContent = '✏️ Atualizar registro';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    regForm.onsubmit = (e) => {
+        e.preventDefault();
+        if (!data.value || !humor.value) {
+            alert('Preencha data e humor.');
+            return;
+        }
+
+        const dados = {
+            id: regId.value ? Number(regId.value) : Date.now(),
+            data: data.value,
+            humor: humor.value,
+            sono: sono.value ? Number(sono.value) : null,
+            alimentacao: alimentacao.value,
+            episodios: episodios.value.trim(),
+            cuidador: cuidador.value.trim()
+        };
+
+        if (regId.value) {
+            registros = registros.map(r => r.id === dados.id ? dados : r);
+        } else {
+            registros.push(dados);
+        }
+
+        salvarNoStorage();
+        limparFormulario();
+        renderizarLista();
+    };
+
+    // Data de hoje
+    data.valueAsDate = new Date();
+
+    // Inicializar
+    renderizarLista();
+</script>
+
+</body>
+</html>

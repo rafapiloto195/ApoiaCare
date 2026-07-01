@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apoio ao Cuidador - Alzheimer</title>
+    <style>
+        /* CSS IDÊNTICO aos anteriores */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 60px;
+        }
+        
+        .navbar-brand {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0;
+            align-items: center;
+            margin: 0;
+        }
+        
+        .nav-link {
+            color: white !important;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-link.active {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-1px);
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        .page-header {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-left: 6px solid #e83e8c;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .page-text {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .secao {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+        
+        .secao-titulo {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            border-bottom: 3px solid #e83e8c;
+            padding-bottom: 0.5rem;
+        }
+        
+        .recurso-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .recurso-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid #e83e8c;
+            transition: all 0.3s ease;
+        }
+        
+        .recurso-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(232,62,140,0.15);
+        }
+        
+        .recurso-titulo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .recurso-link {
+            color: #e83e8c;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+        
+        .recurso-link:hover {
+            text-decoration: underline;
+        }
+        
+        .recurso-desc {
+            color: #666;
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .form-control {
+            padding: 0.9rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            resize: vertical;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #e83e8c;
+            box-shadow: 0 0 0 3px rgba(232,62,140,0.1);
+        }
+        
+        .btn-save {
+            background: linear-gradient(135deg, #e83e8c 0%, #d63384 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(232,62,140,0.4);
+        }
+
+        .diario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .diario-card {
+            background: #fdf2f8;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-left: 4px solid #e83e8c;
+        }
+        
+        .diario-data {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .diario-texto {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-menu {
+                position: fixed; top: 0; right: -100%; height: 100vh; width: 280px;
+                background: #0d6efd; flex-direction: column; padding-top: 80px;
+                transition: right 0.3s ease;
+            }
+            .nav-menu.active { right: 0; }
+            .main-container { padding: 0 15px; }
+            .navbar-container { padding: 0 15px; }
+            .recurso-grid, .diario-grid { grid-template-columns: 1fr; }
+        }
+
+        .accessibility-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #0d6efd; color: white; border: none;
+            border-radius: 50px; padding: 12px 20px; font-size: 1rem;
+            font-weight: 500; box-shadow: 0 4px 15px rgba(13,110,253,0.4);
+            cursor: pointer; z-index: 1000; transition: all 0.3s ease;
+        }
+        
+        .accessibility-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(13,110,253,0.5);
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+        <a href="app.html" class="navbar-brand">🏥 Apoio ao Cuidador</a>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="app.html" class="nav-link">🏠 Início</a></li>
+            <li><a href="paciente.html" class="nav-link">👤 Paciente</a></li>
+            <li><a href="medicamentos.html" class="nav-link">💊 Medicamentos</a></li>
+            <li><a href="registros.html" class="nav-link">📝 Registros diários</a></li>
+            <li><a href="agenda.html" class="nav-link">📅 Agenda & Serviços</a></li>
+            <li><a href="apoio.html" class="nav-link active">❤️ Apoio ao cuidador</a></li>
+        </ul>
+    </div>
+</header>
+
+<main class="main-container">
+    
+    <section class="page-header">
+        <h1 class="page-title">❤️ Cuidar de quem cuida</h1>
+        <p class="page-text">
+            Aqui você encontra <strong>materiais de apoio</strong>, <strong>orientações simples</strong> 
+            e espaço para <strong>registrar como está se sentindo</strong>.
+        </p>
+    </section>
+
+    <!-- Diário pessoal do cuidador -->
+    <section class="secao">
+        <h2 class="secao-titulo">📓 Meu diário - Como estou me sentindo</h2>
+        <div class="form-section">
+            <form id="diarioForm">
+                <input type="hidden" id="diarioId">
+                <div class="form-group">
+                    <label class="form-label" for="diarioData">Data de hoje</label>
+                    <input type="date" id="diarioData" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="diarioTexto">Como foi meu dia como cuidador?</label>
+                    <textarea id="diarioTexto" class="form-control" rows="6" 
+                              placeholder="Escreva aqui suas emoções, dificuldades, vitórias... 
+Ex: Hoje foi difícil a hora do banho, mas ele sorriu quando ouviu música..."></textarea>
+                </div>
+                <button type="submit" class="btn-save" id="btnDiarioSalvar">💭 Salvar no diário</button>
+            </form>
+        </div>
+        <div id="listaDiario" class="diario-grid"></div>
+        <p id="semDiario" style="text-align:center;color:#666;font-style:italic;padding:1rem;display:none;">
+            Ainda não há registros no diário.
+        </p>
+    </section>
+
+    <!-- Materiais educativos -->
+    <section class="secao">
+        <h2 class="secao-titulo">📚 Materiais educativos gratuitos</h2>
+        <div class="recurso-grid">
+            <div class="recurso-card">
+                <div class="recurso-titulo">Manual do Cuidador - Doença de Alzheimer</div>
+                <a href="https://educapes.capes.gov.br/bitstream/capes/719502/1/manual-do-cuidador-doenca-de-alzheimer.pdf" 
+                   class="recurso-link" target="_blank">📥 Baixar PDF completo</a>
+                <div class="recurso-desc">Orientações práticas CAPES para cuidadores brasileiros [web:71]</div>
+            </div>
+            
+            <div class="recurso-card">
+                <div class="recurso-titulo">Orientações para Cuidadores e Familiares</div>
+                <a href="https://subpav.org/aps/uploads/publico/repositorio/Livro_OrientacoesPessoasComDemencias_PDFDigital_20251001.pdf" 
+                   class="recurso-link" target="_blank">📥 Baixar guia completo</a>
+                <div class="recurso-desc">Cartilha completa sobre Alzheimer e autocuidado [web:68]</div>
+            </div>
+            
+            <div class="recurso-card">
+                <div class="recurso-titulo">Guia do Cuidador - Pessoas com Demência</div>
+                <a href="https://saude.rs.gov.br/upload/arquivos/202512/08093134-guia-do-cuidador-de-pessoas-com-demencia-revisado.pdf" 
+                   class="recurso-link" target="_blank">📥 Download gratuito</a>
+                <div class="recurso-desc">Governo RS - cuidados práticos e emocionais [web:79]</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grupos de apoio locais -->
+    <section class="secao">
+        <h2 class="secao-titulo">🤝 Grupos de apoio (Campinas/SP)</h2>
+        <div class="recurso-grid">
+            <div class="recurso-card">
+                <div class="recurso-titulo">ABRAz Campinas</div>
+                <a href="https://www.instagram.com/abrazcampinas/" class="recurso-link" target="_blank">📱 Instagram</a>
+                <div class="recurso-desc">Grupo de apoio local para cuidadores [web:76]</div>
+            </div>
+            
+            <div class="recurso-card">
+                <div class="recurso-titulo">Associação Maior Apoio Alzheimer Campinas</div>
+                <a href="https://mapaosc.ipea.gov.br/detalhar/663377" class="recurso-link" target="_blank">🌐 Ver detalhes</a>
+                <div class="recurso-desc">Endereço: Av. Benjamin Constant, 1657 - Centro [web:80]</div>
+            </div>
+            
+            <div class="recurso-card">
+                <div class="recurso-titulo">FEBRAZ - Apoio aos cuidadores</div>
+                <a href="https://febraz.org.br/como-apoiar-familiares-cuidadores-de-pessoas-que-vivem-com-demencia/" 
+                   class="recurso-link" target="_blank">🌐 Site oficial</a>
+                <div class="recurso-desc">Dicas para suporte emocional [web:66]</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dicas rápidas -->
+    <section class="secao">
+        <h2 class="secao-titulo">💡 Dicas rápidas de autocuidado</h2>
+        <ul style="font-size:1.05rem;color:#555;line-height:1.8;">
+            <li>🛌 Durma pelo menos 7h por noite</li>
+            <li>🍎 Faça refeições regulares e beba água</li>
+            <li>🚶 Caminhe 20min/dia (mesmo que seja em casa)</li>
+            <li>📞 Converse com alguém de confiança diariamente</li>
+            <li>⏰ Reserve 30min/dia só para você</li>
+            <li>🧘 Respire fundo 5x quando estiver estressado</li>
+        </ul>
+    </section>
+
+</main>
+
+<button class="accessibility-btn" id="btnAumentarFonte">🔍 A+</button>
+
+<script>
+    // Menu e acessibilidade
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+    menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => navMenu.classList.remove('active'));
+    });
+
+    let fontSize = 1.1;
+    document.getElementById('btnAumentarFonte').addEventListener('click', () => {
+        fontSize += 0.15;
+        document.body.style.fontSize = fontSize + 'rem';
+    });
+
+    // ---------- DIÁRIO DO CUIDADOR ----------
+    const DIARIO_KEY = 'diarioCuidadorAlzheimer';
+    let diario = JSON.parse(localStorage.getItem(DIARIO_KEY) || '[]');
+
+    const diarioForm = document.getElementById('diarioForm');
+    const diarioId = document.getElementById('diarioId');
+    const diarioData = document.getElementById('diarioData');
+    const diarioTexto = document.getElementById('diarioTexto');
+    const listaDiario = document.getElementById('listaDiario');
+    const semDiario = document.getElementById('semDiario');
+    const btnDiarioSalvar = document.getElementById('btnDiarioSalvar');
+
+    function salvarDiario() {
+        localStorage.setItem(DIARIO_KEY, JSON.stringify(diario));
+    }
+
+    function limparDiarioForm() {
+        diarioId.value = '';
+        diarioData.value = '';
+        diarioTexto.value = '';
+        btnDiarioSalvar.textContent = '💭 Salvar no diário';
+        diarioData.focus();
+    }
+
+    function renderizarDiario() {
+        listaDiario.innerHTML = '';
+        if (diario.length === 0) {
+            semDiario.style.display = 'block';
+            return;
+        }
+        semDiario.style.display = 'none';
+
+        // Mais recente primeiro
+        diario.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+        diario.slice(0, 8).forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'diario-card';
+            const dataFormatada = new Date(item.data).toLocaleDateString('pt-BR');
+            card.innerHTML = `
+                <div class="diario-data">${dataFormatada}</div>
+                <div class="diario-texto">${item.texto}</div>
+                <div style="margin-top:1rem;">
+                    <button class="btn-small btn-edit" onclick="editarDiario(${item.id})">Editar</button>
+                    <button class="btn-small btn-delete" onclick="excluirDiario(${item.id})">Excluir</button>
+                </div>
+            `;
+            listaDiario.appendChild(card);
+        });
+    }
+
+    window.editarDiario = function(id) {
+        const item = diario.find(d => d.id === id);
+        if (item) {
+            diarioId.value = item.id;
+            diarioData.value = item.data;
+            diarioTexto.value = item.texto;
+            btnDiarioSalvar.textContent = '✏️ Atualizar diário';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    window.excluirDiario = function(id) {
+        if (confirm('Excluir este registro do diário?')) {
+            diario = diario.filter(d => d.id !== id);
+            salvarDiario();
+            renderizarDiario();
+        }
+    };
+
+    diarioForm.onsubmit = (e) => {
+        e.preventDefault();
+        if (!diarioData.value || !diarioTexto.value.trim()) {
+            alert('Preencha data e texto.');
+            return;
+        }
+
+        const dados = {
+            id: diarioId.value ? Number(diarioId.value) : Date.now(),
+            data: diarioData.value,
+            texto: diarioTexto.value.trim()
+        };
+
+        if (diarioId.value) {
+            diario = diario.map(d => d.id === dados.id ? dados : d);
+        } else {
+            diario.push(dados);
+        }
+
+        salvarDiario();
+        limparDiarioForm();
+        renderizarDiario();
+    };
+
+    // Data de hoje
+    diarioData.valueAsDate = new Date();
+
+    // Inicializar
+    renderizarDiario();
+</script>
+
+</body>
+</html>

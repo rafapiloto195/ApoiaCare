@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados do Paciente - Apoio ao Cuidador</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 60px;
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 0;
+            align-items: center;
+            margin: 0;
+        }
+
+        .nav-link {
+            color: white !important;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link.active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-1px);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-left: 6px solid #6610f2;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .page-text {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .form-section, .profile-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-control {
+            padding: 0.9rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6610f2;
+            box-shadow: 0 0 0 3px rgba(102,16,242,0.1);
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #6610f2 0%, #520dc2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102,16,242,0.35);
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #f3e8ff 0%, #f8f9fa 100%);
+            border: 1px solid #ddd6fe;
+            border-left: 5px solid #6610f2;
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .profile-card h2 {
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .profile-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid #e9ecef;
+        }
+
+        .profile-label {
+            color: #666;
+            font-size: .9rem;
+            margin-bottom: .25rem;
+        }
+
+        .profile-value {
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: .75rem;
+            margin-top: 1rem;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            padding: .85rem 1rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-clear { background: #dc3545; color: white; }
+        .btn-app { background: #0d6efd; color: white; text-decoration: none; display: block; }
+
+        .accessibility-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #0d6efd; color: white; border: none;
+            border-radius: 50px; padding: 12px 20px; font-size: 1rem;
+            font-weight: 500; box-shadow: 0 4px 15px rgba(13,110,253,0.4);
+            cursor: pointer; z-index: 1000; transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            .nav-menu {
+                position: fixed; top: 0; right: -100%; height: 100vh; width: 280px;
+                background: #0d6efd; flex-direction: column; padding-top: 80px;
+                transition: right 0.3s ease;
+            }
+            .nav-menu.active { right: 0; }
+            .form-row { grid-template-columns: 1fr; }
+            .main-container { padding: 0 15px; }
+            .navbar-container { padding: 0 15px; }
+            .actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="navbar-container">
+        <a href="app.html" class="navbar-brand">🏥 Apoio ao Cuidador</a>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="app.html" class="nav-link">🏠 Início</a></li>
+            <li><a href="paciente.html" class="nav-link active">👤 Paciente</a></li>
+            <li><a href="medicamentos.html" class="nav-link">💊 Medicamentos</a></li>
+            <li><a href="registros.html" class="nav-link">📝 Registros diários</a></li>
+            <li><a href="agenda.html" class="nav-link">📅 Agenda & Serviços</a></li>
+            <li><a href="apoio.html" class="nav-link">❤️ Apoio ao cuidador</a></li>
+        </ul>
+    </div>
+</header>
+
+<main class="main-container">
+
+    <section class="page-header">
+        <h1 class="page-title">👤 Cadastro do Paciente</h1>
+        <p class="page-text">
+            Cadastre os dados básicos da pessoa acompanhada. Essas informações ficam salvas apenas neste navegador.
+        </p>
+    </section>
+
+    <section class="form-section">
+        <form id="pacienteForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="nomePaciente">Nome completo *</label>
+                    <input type="text" id="nomePaciente" class="form-control" required placeholder="Ex: Maria Aparecida Silva">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="sexoPaciente">Sexo *</label>
+                    <select id="sexoPaciente" class="form-control" required>
+                        <option value="">Selecione...</option>
+                        <option value="Feminino">Feminino</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Outro / não informado">Outro / não informado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="nascimentoPaciente">Data de nascimento *</label>
+                    <input type="date" id="nascimentoPaciente" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="responsavelPaciente">Responsável / cuidador</label>
+                    <input type="text" id="responsavelPaciente" class="form-control" placeholder="Ex: João Silva">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-save">💾 Salvar dados do paciente</button>
+        </form>
+    </section>
+
+    <section class="profile-section">
+        <div class="profile-card">
+            <h2>📋 Paciente cadastrado</h2>
+            <div id="pacienteResumo" class="profile-grid"></div>
+            <p id="pacienteVazio" style="color:#666;font-style:italic;">
+                Nenhum paciente cadastrado ainda.
+            </p>
+            <div class="actions">
+                <button id="btnLimpar" class="btn-secondary btn-clear" type="button">🗑️ Apagar cadastro</button>
+                <a href="app.html" class="btn-secondary btn-app">Entrar no app</a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<button class="accessibility-btn" id="btnAumentarFonte">🔍 A+</button>
+
+<script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+    menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => navMenu.classList.remove('active'));
+    });
+
+    let fontSize = 1.1;
+    document.getElementById('btnAumentarFonte').addEventListener('click', () => {
+        fontSize += 0.15;
+        document.body.style.fontSize = fontSize + 'rem';
+    });
+
+    const STORAGE_KEY = 'pacienteAlzheimer';
+    const pacienteForm = document.getElementById('pacienteForm');
+    const nomePaciente = document.getElementById('nomePaciente');
+    const sexoPaciente = document.getElementById('sexoPaciente');
+    const nascimentoPaciente = document.getElementById('nascimentoPaciente');
+    const responsavelPaciente = document.getElementById('responsavelPaciente');
+    const pacienteResumo = document.getElementById('pacienteResumo');
+    const pacienteVazio = document.getElementById('pacienteVazio');
+    const btnLimpar = document.getElementById('btnLimpar');
+
+    function calcularIdade(dataNascimento) {
+        if (!dataNascimento) return '-';
+        const hoje = new Date();
+        const nascimento = new Date(dataNascimento + 'T00:00:00');
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const mes = hoje.getMonth() - nascimento.getMonth();
+        if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) idade--;
+        return idade >= 0 ? idade + ' anos' : '-';
+    }
+
+    function formatarData(data) {
+        if (!data) return '-';
+        return data.split('-').reverse().join('/');
+    }
+
+    function carregarPaciente() {
+        const paciente = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+
+        if (!paciente) {
+            pacienteResumo.innerHTML = '';
+            pacienteVazio.style.display = 'block';
+            return;
+        }
+
+        nomePaciente.value = paciente.nome || '';
+        sexoPaciente.value = paciente.sexo || '';
+        nascimentoPaciente.value = paciente.nascimento || '';
+        responsavelPaciente.value = paciente.responsavel || '';
+
+        pacienteVazio.style.display = 'none';
+        pacienteResumo.innerHTML = `
+            <div class="profile-item">
+                <div class="profile-label">Nome</div>
+                <div class="profile-value">${paciente.nome || '-'}</div>
+            </div>
+            <div class="profile-item">
+                <div class="profile-label">Sexo</div>
+                <div class="profile-value">${paciente.sexo || '-'}</div>
+            </div>
+            <div class="profile-item">
+                <div class="profile-label">Nascimento</div>
+                <div class="profile-value">${formatarData(paciente.nascimento)}</div>
+            </div>
+            <div class="profile-item">
+                <div class="profile-label">Idade aproximada</div>
+                <div class="profile-value">${calcularIdade(paciente.nascimento)}</div>
+            </div>
+            <div class="profile-item">
+                <div class="profile-label">Responsável / cuidador</div>
+                <div class="profile-value">${paciente.responsavel || '-'}</div>
+            </div>
+        `;
+    }
+
+    pacienteForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const paciente = {
+            nome: nomePaciente.value.trim(),
+            sexo: sexoPaciente.value,
+            nascimento: nascimentoPaciente.value,
+            responsavel: responsavelPaciente.value.trim()
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(paciente));
+        carregarPaciente();
+        alert('Dados do paciente salvos com sucesso!');
+    });
+
+    btnLimpar.addEventListener('click', function() {
+        if (confirm('Deseja apagar o cadastro do paciente?')) {
+            localStorage.removeItem(STORAGE_KEY);
+            pacienteForm.reset();
+            carregarPaciente();
+        }
+    });
+
+    carregarPaciente();
+</script>
+
+</body>
+</html>
