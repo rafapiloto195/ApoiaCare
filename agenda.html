@@ -1,52 +1,531 @@
-<div id="tab-servicos" class="tab-content">
-    <section class="form-section">
-        <form id="servicoForm">
-            <input type="hidden" id="servicoId">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda & Serviços - ApoiaCare</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:1.1rem;line-height:1.6;color:#333;background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);min-height:100vh}
+        .navbar{background:linear-gradient(135deg,#0d6efd 0%,#0b5ed7 100%);padding:1rem 0;box-shadow:0 2px 10px rgba(0,0,0,.1)}
+        .navbar-container{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;min-height:60px}
+        .navbar-brand{color:white;font-size:1.4rem;font-weight:700;text-decoration:none;white-space:nowrap}
+        .nav-menu{display:flex;list-style:none;gap:0;align-items:center;margin:0}
+        .nav-link{color:white!important;text-decoration:none;font-weight:500;padding:12px 16px;border-radius:6px;transition:.3s;white-space:nowrap;display:flex;align-items:center}
+        .nav-link.active{background:rgba(255,255,255,.3)}
+        .nav-link:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
+        .menu-toggle{display:none;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;padding:8px}
+        .main-container{max-width:1200px;margin:2rem auto;padding:0 20px}
+        .page-header{background:white;padding:2.5rem;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);margin-bottom:2rem;border-left:6px solid #20c997}
+        .page-title{font-size:1.8rem;color:#1a1a1a;margin-bottom:1rem;font-weight:600}
+        .page-text{color:#555}
+        .tabs-section{background:white;border-radius:16px;padding:0;box-shadow:0 8px 25px rgba(0,0,0,.08);margin-bottom:2rem;overflow:hidden}
+        .tab-buttons{display:flex;background:#f8f9fa;border-bottom:1px solid #dee2e6;flex-wrap:wrap}
+        .tab-btn{flex:1;min-width:180px;padding:1rem;border:none;background:none;font-size:1rem;font-weight:600;cursor:pointer;transition:.3s;color:#6c757d}
+        .tab-btn.active{background:white;color:#20c997;border-bottom:3px solid #20c997}
+        .tab-content{display:none;padding:2rem}
+        .tab-content.active{display:block}
+        .form-section{margin-bottom:2rem}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem}
+        .form-group{display:flex;flex-direction:column;margin-bottom:1.2rem}
+        .form-label{font-weight:500;margin-bottom:.5rem;color:#333}
+        .form-control{padding:.9rem;border:2px solid #e9ecef;border-radius:10px;font-size:1rem;transition:.3s;background:white}
+        .form-control:focus{outline:none;border-color:#20c997;box-shadow:0 0 0 3px rgba(32,201,151,.1)}
+        .btn-save{background:linear-gradient(135deg,#20c997 0%,#1ea88c 100%);color:white;padding:1rem 2rem;border:none;border-radius:10px;font-size:1.1rem;font-weight:500;cursor:pointer;transition:.3s;width:100%}
+        .btn-save:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(32,201,151,.4)}
+        .compromissos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:1.5rem}
+        .compromisso-card{background:white;border-radius:16px;padding:1.5rem;box-shadow:0 8px 25px rgba(0,0,0,.08);border-left:4px solid #20c997}
+        .compromisso-data{font-size:1.3rem;font-weight:700;color:#1a1a1a;margin-bottom:.5rem}
+        .compromisso-tipo{font-size:1.1rem;color:#20c997;font-weight:600;margin-bottom:.5rem}
+        .compromisso-local{color:#666;margin-bottom:1rem}
+        .compromisso-actions{display:flex;gap:.5rem}
+        .btn-small{padding:.6rem 1rem;border:none;border-radius:8px;font-size:.9rem;font-weight:600;flex:1;cursor:pointer;transition:.2s}
+        .btn-edit{background:#0d6efd;color:white}
+        .btn-delete{background:#dc3545;color:white}
+        .btn-edit:hover{background:#0b5ed7;transform:translateY(-1px)}
+        .btn-delete:hover{background:#bb2d3b;transform:translateY(-1px)}
+        .agenda-table,.servicos-table{width:100%;border-collapse:collapse;background:white;border-radius:16px;overflow:hidden;box-shadow:0 8px 25px rgba(0,0,0,.08);margin-bottom:1rem}
+        .agenda-table th,.servicos-table th{background:linear-gradient(135deg,#20c997 0%,#1ea88c 100%);color:white;padding:1rem;text-align:left;font-weight:600}
+        .agenda-table td,.servicos-table td{padding:1rem;border-bottom:1px solid #e9ecef;vertical-align:middle}
+        .agenda-table tr:hover,.servicos-table tr:hover{background:#f8f9fa}
+        .servico-nome{font-weight:700;color:#1a1a1a}
+        .servico-tel{color:#20c997;font-weight:700}
+        .servico-actions{display:flex;gap:.5rem;min-width:170px}
+        .no-itens{text-align:center;color:#666;font-style:italic;padding:2rem}
+        .accessibility-btn{position:fixed;bottom:20px;right:20px;background:#0d6efd;color:white;border:none;border-radius:50px;padding:12px 20px;font-size:1rem;font-weight:500;box-shadow:0 4px 15px rgba(13,110,253,.4);cursor:pointer;z-index:1000}
+        @media(max-width:768px){.menu-toggle{display:block}.nav-menu{position:fixed;top:0;right:-100%;height:100vh;width:280px;background:#0d6efd;flex-direction:column;padding-top:80px;transition:right .3s;z-index:1000}.nav-menu.active{right:0}.form-row{grid-template-columns:1fr}.main-container,.navbar-container{padding:0 15px}.compromissos-grid{grid-template-columns:1fr}.agenda-table,.servicos-table{font-size:.9rem}.agenda-table th,.agenda-table td,.servicos-table th,.servicos-table td{padding:.7rem}.servico-actions{flex-direction:column;min-width:120px}}
+    </style>
+</head>
+<body>
+<header class="navbar">
+    <div class="navbar-container">
+        <a href="app.html" class="navbar-brand">🏥 ApoiaCare</a>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="app.html" class="nav-link">🏠 Início</a></li>
+            <li><a href="paciente.html" class="nav-link">👤 Pacientes</a></li>
+            <li><a href="medicamentos.html" class="nav-link">💊 Medicamentos</a></li>
+            <li><a href="registros.html" class="nav-link">📝 Registros diários</a></li>
+            <li><a href="agenda.html" class="nav-link active">📅 Agenda & Serviços</a></li>
+            <li><a href="apoio.html" class="nav-link">❤️ Apoio ao cuidador</a></li>
+        </ul>
+    </div>
+</header>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label" for="servicoNome">Nome do serviço *</label>
-                    <input type="text" id="servicoNome" class="form-control" required
-                           placeholder="Ex: UBS mais próxima, Médico responsável, Farmácia">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="servicoTelefone">Telefone *</label>
-                    <input type="text" id="servicoTelefone" class="form-control" required
-                           placeholder="Ex: 192, 190, (12) 99999-9999">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="servicoEndereco">Endereço / Observação</label>
-                <input type="text" id="servicoEndereco" class="form-control"
-                       placeholder="Ex: Emergência 24h, Rua X nº 100, Clínica/Hospital">
-            </div>
-
-            <button type="submit" class="btn-save" id="btnServicoSalvar">
-                💾 Salvar serviço
-            </button>
-        </form>
+<main class="main-container">
+    <section class="page-header">
+        <h1 class="page-title">📅 Agenda & Serviços</h1>
+        <p class="page-text">Veja compromissos médicos, contatos essenciais e a agenda de medicação por paciente.</p>
     </section>
 
-    <table class="servicos-table">
-        <thead>
-            <tr>
-                <th>Serviço</th>
-                <th>Telefone</th>
-                <th>Endereço / Observação</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody id="listaServicos"></tbody>
-    </table>
+    <section class="tabs-section">
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="medicamentos">Agenda de medicamentos</button>
+            <button class="tab-btn" data-tab="compromissos">Compromissos</button>
+            <button class="tab-btn" data-tab="servicos">Serviços essenciais</button>
+        </div>
 
-    <p id="semServicos" class="no-itens" style="display:none;">
-        Nenhum serviço cadastrado.
-    </p>
+        <div id="tab-medicamentos" class="tab-content active">
+            <div id="agendaMedicamentos"></div>
+        </div>
 
-    <p style="text-align:center;color:#666;font-size:0.95rem;margin-top:1rem;">
-        📌 Cadastre contatos importantes como SAMU, Polícia, UBS, médico responsável,
-        farmácia, cuidador reserva ou familiar de emergência.
-    </p>
-</div>
+        <div id="tab-compromissos" class="tab-content">
+            <section class="form-section">
+                <form id="compromissoForm">
+                    <input type="hidden" id="compromissoId">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoPacienteSelect">Paciente *</label>
+                            <select id="compromissoPacienteSelect" class="form-control" required>
+                                <option value="">Selecione o paciente...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoData">Data *</label>
+                            <input type="date" id="compromissoData" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoHora">Hora *</label>
+                            <input type="time" id="compromissoHora" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoTipo">Tipo *</label>
+                            <select id="compromissoTipo" class="form-control" required>
+                                <option value="">Selecione...</option>
+                                <option value="🩺 Consulta médica">🩺 Consulta médica</option>
+                                <option value="🔬 Exame">🔬 Exame</option>
+                                <option value="🧠 Terapia ocupacional">🧠 Terapia ocupacional</option>
+                                <option value="📋 Outro">📋 Outro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoLocal">Local</label>
+                            <input type="text" id="compromissoLocal" class="form-control" placeholder="Ex: UBS Centro, Rua das Flores 123">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="compromissoObservacao">Observação</label>
+                            <input type="text" id="compromissoObservacao" class="form-control" placeholder="Ex: levar exames anteriores">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-save" id="btnCompromissoSalvar">📝 Salvar compromisso</button>
+                </form>
+            </section>
+
+            <div id="listaCompromissos" class="compromissos-grid"></div>
+            <p id="semCompromissos" class="no-itens" style="display:none;">Nenhum compromisso cadastrado.</p>
+        </div>
+
+        <div id="tab-servicos" class="tab-content">
+            <section class="form-section">
+                <form id="servicoForm">
+                    <input type="hidden" id="servicoId">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="servicoNome">Nome do serviço *</label>
+                            <input type="text" id="servicoNome" class="form-control" required placeholder="Ex: UBS mais próxima, médico responsável, farmácia">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="servicoTelefone">Telefone *</label>
+                            <input type="text" id="servicoTelefone" class="form-control" required placeholder="Ex: 192, 190, (12) 99999-9999">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="servicoEndereco">Endereço / Observação</label>
+                        <input type="text" id="servicoEndereco" class="form-control" placeholder="Ex: Emergência 24h, Clínica/Hospital, Rua X nº 100">
+                    </div>
+
+                    <button type="submit" class="btn-save" id="btnServicoSalvar">💾 Salvar serviço</button>
+                </form>
+            </section>
+
+            <table class="servicos-table">
+                <thead>
+                    <tr>
+                        <th>Serviço</th>
+                        <th>Telefone</th>
+                        <th>Endereço / Observação</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="listaServicos"></tbody>
+            </table>
+
+            <p id="semServicos" class="no-itens" style="display:none;">Nenhum serviço cadastrado.</p>
+            <p style="text-align:center;color:#666;font-size:.95rem;margin-top:1rem;">📌 Cadastre contatos importantes como SAMU, Polícia, UBS, médico responsável, farmácia, cuidador reserva ou familiar de emergência.</p>
+        </div>
+    </section>
+</main>
+
+<button class="accessibility-btn" id="btnAumentarFonte">🔍 A+</button>
+
+<script>
+    // Menu mobile e acessibilidade
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+
+    menuToggle.addEventListener('click', () => navMenu.classList.toggle('active'));
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => navMenu.classList.remove('active'));
+    });
+
+    let fontSize = 1.1;
+    document.getElementById('btnAumentarFonte').addEventListener('click', () => {
+        fontSize += 0.15;
+        document.body.style.fontSize = fontSize + 'rem';
+    });
+
+    // Abas
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Chaves do armazenamento local
+    const PACIENTES_KEY = 'pacientesAlzheimer';
+    const MEDS_KEY = 'medicamentosAlzheimer';
+    const COMPROMISSOS_KEY = 'compromissosAlzheimer';
+    const SERVICOS_KEY = 'servicosEssenciaisApoiaCare';
+
+    const pacientes = JSON.parse(localStorage.getItem(PACIENTES_KEY) || '[]');
+    let medicamentos = JSON.parse(localStorage.getItem(MEDS_KEY) || '[]');
+    let compromissos = JSON.parse(localStorage.getItem(COMPROMISSOS_KEY) || '[]');
+    let servicos = JSON.parse(localStorage.getItem(SERVICOS_KEY) || '[]');
+
+    function pacienteNome(id) {
+        const paciente = pacientes.find(p => Number(p.id) === Number(id));
+        return paciente ? paciente.nome : 'Paciente não definido';
+    }
+
+    // Agenda de medicamentos por paciente
+    function renderizarAgendaMedicamentos() {
+        let linhas = [];
+
+        medicamentos.forEach(med => {
+            (med.horarios || '')
+                .split(',')
+                .map(h => h.trim())
+                .filter(Boolean)
+                .forEach(hora => {
+                    linhas.push({
+                        hora: hora,
+                        paciente: pacienteNome(med.pacienteId),
+                        medicamento: med.nome,
+                        dose: med.dose || '-',
+                        medico: med.medico || '-'
+                    });
+                });
+        });
+
+        linhas.sort((a, b) => a.hora.localeCompare(b.hora) || a.paciente.localeCompare(b.paciente));
+
+        const area = document.getElementById('agendaMedicamentos');
+
+        if (!linhas.length) {
+            area.innerHTML = '<p class="no-itens">Nenhum medicamento cadastrado. Vá em Medicamentos e vincule um remédio a um paciente.</p>';
+            return;
+        }
+
+        area.innerHTML = `
+            <table class="agenda-table">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Paciente</th>
+                        <th>Medicamento</th>
+                        <th>Dose</th>
+                        <th>Médico</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${linhas.map(linha => `
+                        <tr>
+                            <td><strong>${linha.hora}</strong></td>
+                            <td>${linha.paciente}</td>
+                            <td>${linha.medicamento}</td>
+                            <td>${linha.dose}</td>
+                            <td>${linha.medico}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    // Compromissos vinculados ao paciente
+    const compromissoForm = document.getElementById('compromissoForm');
+    const compromissoId = document.getElementById('compromissoId');
+    const compromissoPacienteSelect = document.getElementById('compromissoPacienteSelect');
+    const compromissoData = document.getElementById('compromissoData');
+    const compromissoHora = document.getElementById('compromissoHora');
+    const compromissoTipo = document.getElementById('compromissoTipo');
+    const compromissoLocal = document.getElementById('compromissoLocal');
+    const compromissoObservacao = document.getElementById('compromissoObservacao');
+    const btnCompromissoSalvar = document.getElementById('btnCompromissoSalvar');
+    const listaCompromissos = document.getElementById('listaCompromissos');
+    const semCompromissos = document.getElementById('semCompromissos');
+
+    function carregarPacientesCompromisso() {
+        compromissoPacienteSelect.innerHTML = '<option value="">Selecione o paciente...</option>';
+
+        if (!pacientes.length) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = 'Nenhum paciente cadastrado';
+            compromissoPacienteSelect.appendChild(option);
+            return;
+        }
+
+        pacientes.forEach(paciente => {
+            const option = document.createElement('option');
+            option.value = paciente.id;
+            option.textContent = paciente.nome;
+            compromissoPacienteSelect.appendChild(option);
+        });
+    }
+
+    function salvarCompromissos() {
+        localStorage.setItem(COMPROMISSOS_KEY, JSON.stringify(compromissos));
+    }
+
+    function limparFormCompromisso() {
+        compromissoId.value = '';
+        compromissoPacienteSelect.value = '';
+        compromissoData.value = '';
+        compromissoHora.value = '';
+        compromissoTipo.value = '';
+        compromissoLocal.value = '';
+        compromissoObservacao.value = '';
+        btnCompromissoSalvar.textContent = '📝 Salvar compromisso';
+    }
+
+    function renderizarCompromissos() {
+        listaCompromissos.innerHTML = '';
+
+        if (compromissos.length === 0) {
+            semCompromissos.style.display = 'block';
+            return;
+        }
+
+        semCompromissos.style.display = 'none';
+        compromissos.sort((a, b) => new Date(a.data + 'T' + a.hora) - new Date(b.data + 'T' + b.hora));
+
+        compromissos.forEach(comp => {
+            const card = document.createElement('div');
+            card.className = 'compromisso-card';
+            const dataFormatada = comp.data ? comp.data.split('-').reverse().join('/') : '-';
+
+            card.innerHTML = `
+                <div class="compromisso-data">${dataFormatada} - ${comp.hora}</div>
+                <div class="compromisso-tipo">${comp.tipo}</div>
+                <div class="compromisso-local"><strong>Paciente:</strong> ${pacienteNome(comp.pacienteId)}</div>
+                <div class="compromisso-local"><strong>Local:</strong> ${comp.local || '-'}</div>
+                ${comp.observacao ? `<div class="compromisso-local"><strong>Obs.:</strong> ${comp.observacao}</div>` : ''}
+                <div class="compromisso-actions">
+                    <button class="btn-small btn-edit">Editar</button>
+                    <button class="btn-small btn-delete">Excluir</button>
+                </div>
+            `;
+
+            card.querySelector('.btn-edit').onclick = () => {
+                compromissoId.value = comp.id;
+                compromissoPacienteSelect.value = comp.pacienteId || '';
+                compromissoData.value = comp.data;
+                compromissoHora.value = comp.hora;
+                compromissoTipo.value = comp.tipo;
+                compromissoLocal.value = comp.local || '';
+                compromissoObservacao.value = comp.observacao || '';
+                btnCompromissoSalvar.textContent = '✏️ Atualizar compromisso';
+            };
+
+            card.querySelector('.btn-delete').onclick = () => {
+                if (confirm('Excluir compromisso?')) {
+                    compromissos = compromissos.filter(c => Number(c.id) !== Number(comp.id));
+                    salvarCompromissos();
+                    renderizarCompromissos();
+                }
+            };
+
+            listaCompromissos.appendChild(card);
+        });
+    }
+
+    compromissoForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!compromissoPacienteSelect.value || !compromissoData.value || !compromissoHora.value || !compromissoTipo.value) {
+            alert('Preencha paciente, data, hora e tipo.');
+            return;
+        }
+
+        const dados = {
+            id: compromissoId.value ? Number(compromissoId.value) : Date.now(),
+            pacienteId: Number(compromissoPacienteSelect.value),
+            data: compromissoData.value,
+            hora: compromissoHora.value,
+            tipo: compromissoTipo.value,
+            local: compromissoLocal.value.trim(),
+            observacao: compromissoObservacao.value.trim()
+        };
+
+        if (compromissoId.value) {
+            compromissos = compromissos.map(c => Number(c.id) === Number(dados.id) ? dados : c);
+        } else {
+            compromissos.push(dados);
+        }
+
+        salvarCompromissos();
+        limparFormCompromisso();
+        renderizarCompromissos();
+    });
+
+    // Serviços essenciais editáveis
+    const servicoForm = document.getElementById('servicoForm');
+    const servicoId = document.getElementById('servicoId');
+    const servicoNome = document.getElementById('servicoNome');
+    const servicoTelefone = document.getElementById('servicoTelefone');
+    const servicoEndereco = document.getElementById('servicoEndereco');
+    const btnServicoSalvar = document.getElementById('btnServicoSalvar');
+    const listaServicos = document.getElementById('listaServicos');
+    const semServicos = document.getElementById('semServicos');
+
+    function inicializarServicosPadrao() {
+        if (servicos.length > 0) {
+            return;
+        }
+
+        servicos = [
+            { id: Date.now() + 1, nome: 'SAMU', telefone: '192', endereco: 'Emergência 24h' },
+            { id: Date.now() + 2, nome: 'Polícia', telefone: '190', endereco: 'Emergência 24h' },
+            { id: Date.now() + 3, nome: 'ABRAz', telefone: '11 3253-7491', endereco: 'abr-az.org.br' }
+        ];
+
+        salvarServicos();
+    }
+
+    function salvarServicos() {
+        localStorage.setItem(SERVICOS_KEY, JSON.stringify(servicos));
+    }
+
+    function limparFormServico() {
+        servicoId.value = '';
+        servicoNome.value = '';
+        servicoTelefone.value = '';
+        servicoEndereco.value = '';
+        btnServicoSalvar.textContent = '💾 Salvar serviço';
+    }
+
+    function renderizarServicos() {
+        listaServicos.innerHTML = '';
+
+        if (servicos.length === 0) {
+            semServicos.style.display = 'block';
+            return;
+        }
+
+        semServicos.style.display = 'none';
+
+        servicos.forEach(servico => {
+            const tr = document.createElement('tr');
+
+            tr.innerHTML = `
+                <td class="servico-nome">${servico.nome}</td>
+                <td class="servico-tel">${servico.telefone}</td>
+                <td>${servico.endereco || '-'}</td>
+                <td>
+                    <div class="servico-actions">
+                        <button class="btn-small btn-edit">Editar</button>
+                        <button class="btn-small btn-delete">Excluir</button>
+                    </div>
+                </td>
+            `;
+
+            tr.querySelector('.btn-edit').onclick = () => {
+                servicoId.value = servico.id;
+                servicoNome.value = servico.nome;
+                servicoTelefone.value = servico.telefone;
+                servicoEndereco.value = servico.endereco || '';
+                btnServicoSalvar.textContent = '✏️ Atualizar serviço';
+            };
+
+            tr.querySelector('.btn-delete').onclick = () => {
+                if (confirm('Excluir serviço?')) {
+                    servicos = servicos.filter(s => Number(s.id) !== Number(servico.id));
+                    salvarServicos();
+                    renderizarServicos();
+                }
+            };
+
+            listaServicos.appendChild(tr);
+        });
+    }
+
+    servicoForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (!servicoNome.value.trim() || !servicoTelefone.value.trim()) {
+            alert('Preencha o nome do serviço e o telefone.');
+            return;
+        }
+
+        const dados = {
+            id: servicoId.value ? Number(servicoId.value) : Date.now(),
+            nome: servicoNome.value.trim(),
+            telefone: servicoTelefone.value.trim(),
+            endereco: servicoEndereco.value.trim()
+        };
+
+        if (servicoId.value) {
+            servicos = servicos.map(s => Number(s.id) === Number(dados.id) ? dados : s);
+        } else {
+            servicos.push(dados);
+        }
+
+        salvarServicos();
+        limparFormServico();
+        renderizarServicos();
+    });
+
+    // Inicialização
+    compromissoData.valueAsDate = new Date();
+    carregarPacientesCompromisso();
+    renderizarAgendaMedicamentos();
+    renderizarCompromissos();
+    inicializarServicosPadrao();
+    renderizarServicos();
+</script>
+</body>
+</html>
